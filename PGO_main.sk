@@ -1,0 +1,219 @@
+#변수들선언
+variables:
+	{timeleft} = 420
+	{ongoing} = false
+	{alreadyopened} = false
+	{removesome} = false
+	{timerdone} = false
+	{kidnap} = false
+#테스트명령어
+command /customtemtest <integer>:
+	trigger:
+		set {x} to the player
+		emerald(arg)
+		set {bonustem} to 0
+function emerald(c: integer):
+	if {_c} is 1:
+		set {_name} to "§c열품타"
+		set {_lore} to "§7다음 문제를 §a5분 §7미룹니다"
+		give {x} emerald named "%{_name}%" with lore "%{_lore}%" with custom model data {_c}
+		send "특수템 발견! : §d1/4" to all players
+	else if {_c} is 2:
+		set {_name} to "§2수시납치"
+		set {_lore} to "§7드래곤이 잡힐 때까지 플레이어들을 §a계속 엔드로 납치하고"
+		set {_lore2} to "§7대신, 엔더 드래곤을 §k한국 교육과정 평가원§7으로 §a진화§7시킵니다"
+		give {x} emerald named "%{_name}%" with lore "%{_lore}%" and "%{_lore2}%" with custom model data {_c}
+		send "특수템 발견! : §d4/4" to all players
+	else if {_c} is 3:
+		set {_name} to "§b감각적 직관"
+		set {_lore} to "§7다음 문제의 선지를 §a2개 §7제거합니다"
+		give {x} emerald named "%{_name}%" with lore "%{_lore}%" with custom model data {_c}
+		send "특수템 발견! : §d2/4" to all players
+	else if {_c} is 4:
+		set {_name} to "§6안전빵"
+		set {_lore} to "§7초기화되지 않는 §a공용 창고 §7기능을 해금합니다"
+		give {x} emerald named "%{_name}%" with lore "%{_lore}%" with custom model data {_c}
+		send "특수템 발견! : §d3/4" to all players
+command /playpause:
+	trigger:
+		if {ongoing} is false:
+			set {ongoing} to true
+			send "timer §aresumed." to the player
+		else:
+			set {ongoing} to false
+			send "timer §cstopped." to the player
+#특수템들 우클릭
+on rightclick:
+	if player is holding a emerald with custom model data 1:
+		add 300 to {timeleft}
+		remove 1 of emerald with custom model data 1 from player's inventory
+		play sound "block_enchantment_table_use" with volume 1.8 to players
+		set {_posx} to x position of the player
+		set {_posy} to y position of the player
+		set {_posz} to z position of the player
+		execute console command "/particle dust_color_transition{from_color:[0.329,0.376,1.000],scale:1,to_color:[1.000,0.000,0.000]} %{_posx}% %{_posy}% %{_posz}% 2 2 2 100 300 normal"
+	if player is holding a emerald with custom model data 2:
+		remove 1 of emerald with custom model data 2 from player's inventory
+		play sound "block_enchantment_table_use" with volume 1.8 to players
+		set {kidnap} to true
+		set {_posx} to x position of the player
+		set {_posy} to y position of the player
+		set {_posz} to z position of the player
+		execute console command "/particle dust_color_transition{from_color:[0.329,0.376,1.000],scale:1,to_color:[1.000,0.000,0.000]} %{_posx}% %{_posy}% %{_posz}% 2 2 2 100 300 normal"
+		loop all players:
+			execute console command "/execute in minecraft:the_end run tp %loop-player's display name% 0 70 0"
+			send "§b너 납치!" to the player
+	if player is holding a emerald with custom model data 3:
+		set {removesome} to true
+		remove 1 of emerald with custom model data 3 from player's inventory
+		play sound "block_enchantment_table_use" with volume 1.8 to players
+		set {_posx} to x position of the player
+		set {_posy} to y position of the player
+		set {_posz} to z position of the player
+		execute console command "/particle dust_color_transition{from_color:[0.329,0.376,1.000],scale:1,to_color:[1.000,0.000,0.000]} %{_posx}% %{_posy}% %{_posz}% 2 2 2 100 300 normal"
+	if player is holding a emerald with custom model data 4:
+		remove 1 of emerald with custom model data 4 from player's inventory
+		play sound "block_enchantment_table_use" with volume 1.8 to players
+		set {_posx} to x position of the player
+		set {_posy} to y position of the player
+		set {_posz} to z position of the player
+		execute console command "/particle dust_color_transition{from_color:[0.329,0.376,1.000],scale:1,to_color:[1.000,0.000,0.000]} %{_posx}% %{_posy}% %{_posz}% 2 2 2 100 300 normal"
+		send "§e/안전빵 명령어를 사용해 보세요!" to all players
+on death of player:
+	if {kidnap} is true:
+		wait 5 seconds
+		execute console command "/execute in minecraft:the_end run tp %victim's display name% 0 70 0"
+		send "§b너 납치!" to victim
+on dragon egg form:
+	set {kidnap} to false
+	set {ongoing} to false
+
+on load:
+	set {storage.in.use} to false
+	set {xpevent} to false
+command /안전빵:
+	trigger:
+		if {storage.in.use} is true:
+			send "&c[!] 현재 다른 놈이 공용 창고를 사용 중입니다"
+			send "&c잠시 후 다시 시도해주세요."
+			stop
+		
+		set {storage.in.use} to true
+		set {storage.user} to player's name
+		
+		open chest inventory with 2 row named "창고" to the player
+		loop 18 times:
+			# (loop-number는 1부터 시작하므로 슬롯 번호 0~17에 맞게 -1)
+			set slot loop-num -1 of current inventory of the player to {storage.slot::%loop-num -1%}
+
+on inventory close:
+	if name of current inventory of player is "창고":
+		if player's name is {storage.user}:
+			loop 18 times:
+				set {storage.slot::%(loop-num -1)%} to slot loop-num -1 of current inventory
+			set {storage.in.use} to false
+			clear {storage.user}
+			send "&a[!] 창고에 아이템을 저장하고 닫았습니다"
+
+
+
+#타이머 시스템
+every 1 second:
+	if {timeleft} > 660:
+		set {tenet} to "§2■■■■■§a■■"
+	else if {timeleft} > 600:
+		set {tenet} to "§2■■■■§a■■■"
+	else if {timeleft} > 540:
+		set {tenet} to "§2■■■§a■■■■"
+	else if {timeleft} > 480:
+		set {tenet} to "§2■■§a■■■■■"
+	else if {timeleft} > 420:
+		set {tenet} to "§2■§a■■■■■■"
+	else if {timeleft} > 360:
+		set {tenet} to "§a■■■■■■■"
+	else if {timeleft} > 300:
+		set {tenet} to "§a■■■■■■§7■"
+	else if {timeleft} > 240:
+		set {tenet} to "§a■■■■■§7■■"
+	else if {timeleft} > 180:
+		set {tenet} to "§a■■■■§7■■■"
+	else if {timeleft} > 120:
+		set {tenet} to "§a■■■§7■■■■"
+	else if {timeleft} > 60:
+		set {tenet} to "§a■■§7■■■■■"
+	else if {timeleft} <= 60:
+		if {timeleft} <= 0:
+			set {tenet} to "§7■■■■■■■"
+		else:
+			set {tenet} to "§a■§7■■■■■■"
+	if {ongoing} is true:
+		add -1 to {timeleft}
+		send action bar "다음 문제까지 %{tenet}%" to all players
+		if {timeleft} <= 0:
+			if {alreadyopened} is false:
+				set {alreadyopened} to true
+				set {randint} to get_random_integer_except(1, 66, {_excluded_numbers::*})
+				add {randint} to {_excluded_numbers::*}
+				set {guiname} to {problems::%{randint}%}
+				set {bridge} to y component of {jungotable::%{randint}%}
+				SplitTitle()
+				wait 60 ticks
+				
+				create a new message and store it in {_msg}:
+					set {_upload} to new file upload from file "plugins/DiSky/assets/%{randint}%.png" with name "%{randint}%.png"
+					add {_upload} to the attachments of the message
+				post {_msg} to text channel with id "당신의 디스코드 채널 아이디"
+				set {theanswer} to x component of {jungotable::%{randint}%}
+				create a gui with virtual chest inventory with 6 rows named "§f🌈😀":
+					if {removesome} is false:
+						make gui slot 45 with stick named "1":
+							DopOrNot({theanswer},1)
+						make gui slot 47 with stick named "2":
+							DopOrNot({theanswer},2)
+						make gui slot 49 with stick named "3":
+							DopOrNot({theanswer},3)
+						make gui slot 51 with stick named "4":
+							DopOrNot({theanswer},4)
+						make gui slot 53 with stick named "5":
+							DopOrNot({theanswer},5)
+					if {removesome} is true:
+						set {removesome} to false
+						PickSome({theanswer})
+						set {_rrri} to random integer between 1 and 3
+						if {_rrri} is 1:
+							make gui slot 45 with blaze rod named "%{theanswer}%":
+								DopOrNot({theanswer},{theanswer})
+							make gui slot 49 with blaze rod named "%{var1}%":
+								DopOrNot({theanswer},{var1})
+							make gui slot 53 with blaze rod named "%{var2}%":
+								DopOrNot({theanswer},{var2})
+						if {_rrri} is 2:
+							make gui slot 45 with blaze rod named "%{var2}%":
+								DopOrNot({theanswer},{var2})
+							make gui slot 49 with blaze rod named "%{theanswer}%":
+								DopOrNot({theanswer},{theanswer})
+							make gui slot 53 with blaze rod named "%{var1}%":
+								DopOrNot({theanswer},{var1})
+						if {_rrri} is 3:
+							make gui slot 45 with blaze rod named "%{var1}%":
+								DopOrNot({theanswer},{var1})
+							make gui slot 49 with blaze rod named "%{var2}%":
+								DopOrNot({theanswer},{var2})
+							make gui slot 53 with blaze rod named "%{theanswer}%":
+								DopOrNot({theanswer},{theanswer})
+					run on gui close:
+						if {timerdone} is false:
+							cancel gui close
+				open the created gui for all players
+				Timer()
+				wait 45 seconds
+				set {timerdone} to true
+				
+				set {timeleft} to 420
+				set {alreadyopened} to false
+				set {justshutthefuckup} to false
+				
+			else:
+				stop
+on player pickup of dragon egg:
+	set name of event-item stack to "Team.08 이제 너희 차례다 ㅇㅇ"

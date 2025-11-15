@@ -1,0 +1,247 @@
+﻿define new bot named "Bot":
+    token: "당신의 봇 토큰"
+    intents: guild_members, guild_messages, GUILD_PRESENCES
+    policy: all
+    cache flags: activity
+    compression: zlib
+    auto reconnect: true
+
+    on ready:
+        set the online status of bot "Bot" to online
+on dragon fireball hit:
+    loop 5 times:
+        spawn creeper at event-location:
+            charge the creeper
+            set the name of the creeper to "§b메디컬 반수생"
+            apply infinite resistance of tier 6 to the creeper
+function SplitTitle():
+    if {bridge} is 1:
+        set {dif} to "난이도 [§a밥§r]"
+    else if {bridge} is 2:
+        set {dif} to "난이도 [§6미디움§r]"
+    else if {bridge} is 3:
+        set {dif} to "난이도 [§5킬러§r]"
+    set {timerdone} to false
+    play sound "BLOCK_NOTE_BLOCK_HAT" with volume 1 and pitch 0.5 for all players
+    send title "난이도 [§5킬러§r]" to all players for 5 ticks with fadein 0 ticks and fadeout 0 ticks
+    wait 5 ticks
+    play sound "BLOCK_NOTE_BLOCK_HAT" with volume 1 and pitch 0.5 for all players
+    send title "난이도 [§a밥§r]" to all players for 5 ticks with fadein 0 ticks and fadeout 0 ticks
+    wait 5 ticks
+    play sound "BLOCK_NOTE_BLOCK_HAT" with volume 1 and pitch 0.5 for all players
+    send title "난이도 [§6미디움§r]" to all players for 5 ticks with fadein 0 ticks and fadeout 0 ticks
+    wait 5 ticks
+    play sound "BLOCK_NOTE_BLOCK_HAT" with volume 1 and pitch 0.5 for all players
+    send title "난이도 [§5킬러§r]" to all players for 5 ticks with fadein 0 ticks and fadeout 0 ticks
+    wait 5 ticks
+    play sound "BLOCK_NOTE_BLOCK_HAT" with volume 1 and pitch 0.5 for all players
+    send title "난이도 [§a밥§r]" to all players for 5 ticks with fadein 0 ticks and fadeout 0 ticks
+    wait 5 ticks
+    play sound "BLOCK_NOTE_BLOCK_HAT" with volume 1 and pitch 0.5 for all players
+    send title "난이도 [§6미디움§r]" to all players for 5 ticks with fadein 0 ticks and fadeout 0 ticks
+    wait 5 ticks
+    send title "%{dif}%" to all players for 25 ticks with fadein 0 ticks and fadeout 5 ticks
+    play sound "entity.player.levelup" with volume 1 and pitch 0.5 to all players
+function Timer():
+    set {_value} to 100
+    loop 45 times:
+        if {justshutthefuckup} is false:
+            create bossbar titled "§f남은 시간" and id "k" for all players with progress {_value} with colors red
+            remove 100/45 from {_value}
+            wait 1 second
+            remove bossbar "k"
+function get_random_integer_except(min: number, max: number, excluded_values: objects) :: number:
+    set {_random_number} to a random integer between {_min} and {_max}
+    while {_excluded_values} contains {_random_number}:
+        set {_random_number} to a random integer between {_min} and {_max}
+    return {_random_number}
+function DopOrNot(dop: integer, mydop: integer):
+    set {timerdone} to true
+    set {justshutthefuckup} to true
+    remove bossbar "k"
+    if {_dop} is {_mydop}:
+        play sound "minecraft:ui.toast.challenge_complete" with volume 1.8 to players
+        create a gui with virtual chest inventory with 3 rows named "§f🌈✅"
+        open the created gui for all players
+        wait 3 seconds
+
+        play sound "entity.player.levelup" with volume 1.8 to players
+        Correct(random integer between 1 and 11)
+    else:
+        play sound "entity.item.break" with volume 1.8 to players
+        create a gui with virtual chest inventory with 3 rows named "§f🌈❌"
+        open the created gui for all players
+        wait 3 seconds
+
+        play sound "entity.player.levelup" with volume 1.8 to players
+        Nope(random integer between 1 and 13)
+    
+function Nope(a: integer):
+    if {_a} is 1:
+        send title "§l§c벡스 15마리 소환!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            spawn 15 vex at loop-player
+    else if {_a} is 2:
+        send title "§l§c대형 마그마큐브 소환!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            spawn a magma cube at loop-player
+            set {_cube} to last spawned magma cube
+            set entity size of {_cube} to 6
+    else if {_a} is 3:
+        send title "§l§c기아/식중독 체험!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            apply hunger 255 to loop-player for 30 seconds
+            apply poison to loop-player for 30 seconds
+    else if {_a} is 4:
+        send title "§l§c올라가라 얍!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            apply levitation to loop-player for 11 seconds
+            wait 10.5 seconds
+            apply instant damage to loop-player
+    else if {_a} is 5:
+        send title "§l§c일시적 체력 반토막!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            set the maximum health of loop-player to 5
+            wait 7 minutes
+            set the maximum health of loop-player to 10
+    else if {_a} is 6:
+        send title "§l§c'빅 가이'소환!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            spawn a ravager at loop-player
+    else if {_a} is 7:
+        send title "§l§c몬스터 패키지 소환!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            spawn 2 zombie at loop-player
+            spawn 2 skeleton at loop-player
+            spawn 2 creeper at loop-player
+            spawn 2 elder guardian at loop-player
+    else if {_a} is 8:
+        send title "§l§c체력낮은 워든 소환!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            spawn warden at loop-player
+            set {_warden} to last spawned entity
+            set max health of {_warden} to 5
+    else if {_a} is 9:
+        send title "§l§cㅈㄴ쎈 투명거미 소환!!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            spawn spider at loop-player
+            set {_spider} to last spawned entity
+            apply infinite strength of tier 2 to {_spider}
+            apply infinite invisibility to {_spider}
+            apply infinite speed of tier 2 to {_spider}
+    else if {_a} is 10:
+        send title "§l§c와 별똥별이다!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            set block 2 meter above loop-player to anvil
+            set block 4 meter above loop-player to anvil
+    else if {_a} is 11:
+        send title "§l§c위를 보지마!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            set block 2 meter above loop-player to lava
+    else if {_a} is 12:
+        send title "§l§c인벤토리를 체크해보는게 좋을걸!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            set helmet of loop-player to brown dye named "똥"
+            set chestplate of loop-player to brown dye named "똥"
+            set leggings of loop-player to brown dye named "똥"
+            set boots of loop-player to brown dye named "똥"
+    else if {_a} is 13:
+        send title "§l§cTNT!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            loop 5 times:
+                spawn a primed tnt at loop-player
+                wait 1 second
+
+function PickSome(w: integer):
+    set {_list::*} to 1, 2, 3, 4, 5
+    remove {_w} from {_list::*}
+    set {_list::*} to shuffled {_list::*}
+    set {var1} to {_list::1}
+    set {var2} to {_list::2}
+
+on experience spawn:
+    if {xpevent} is true:
+        add 30 to the spawned experience
+function Correct(b: integer):
+    loop all players:
+        add loop-player to {_players::*}
+    chance of 10%:
+        set {bonustem} to random integer between 1 and 4
+    if {bonustem} is not 0:
+        set {x} to {_players::%random integer between 1 and 2%}
+        emerald({bonustem})
+        set {bonustem} to 0
+        
+    if {_b} is 1:
+        send title "§l§a불사의 토템 증정!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            drop a totem of undying at loop-player's location
+    else if {_b} is 2:
+        send title "§l§a일시적 힘/속도!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            apply strength to loop-player for 7 minutes
+            apply speed to loop-player for 7 minutes
+    else if {_b} is 3:
+        send title "§l§a철 풀템 증정!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            drop a iron helmet at loop-player's location
+            drop a iron chestplate at loop-player's location
+            drop a iron leggings at loop-player's location
+            drop a iron boots at loop-player's location
+            drop a iron sword at loop-player's location
+            drop a iron pickaxe at loop-player's location
+            drop a iron axe at loop-player's location
+            drop a iron hoe at loop-player's location
+            drop a iron shovel at loop-player's location
+    else if {_b} is 4:
+        send title "§l§a일시적 경험치 5배 이벤트!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        set {xpevent} to true
+        wait 7 minutes
+        set {xpevent} to false
+    else if {_b} is 5:
+        send title "§l§a밑에 다이아 블럭 설치!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            set block 1 meter below loop-player to diamond block
+    else if {_b} is 6:
+        send title "§l§a흑요석 5개 증정!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            drop 5 obsidian at loop-player's location
+    else if {_b} is 7:
+        send title "§l§a일시적 체력 2배!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            set max health of loop-player to 20
+            apply regeneration 5 to loop-player for 10 seconds
+            wait 7 minutes
+            set max health of loop-player to 10
+    else if {_b} is 8:
+        send title "§l§a일시적 점강/느린낙하!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            apply jump boost 4 to loop-player for 7 minutes
+            apply slow falling to loop-player for 7 minutes
+    else if {_b} is 9:
+        send title "§l§a인벤의 모든템 랜덤인챈트!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            loop items in loop-player's inventory:
+                enchant loop-item with random element of all enchantments
+                enchant loop-item with random element of all enchantments
+                enchant loop-item with random element of all enchantments
+    else if {_b} is 10:
+        send title "§l§a마법의 소 소환!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            spawn cow at loop-player
+            set {_cow} to last spawned entity
+            set name of {_cow} to "마법의 소"
+            set max health of {_cow} to 0.5
+    else if {_b} is 11:
+        send title "§l§a발사체 패키지 증정!" to all players for 3 seconds with fadein 0.5 seconds and fadeout 0.5 seconds
+        loop all players:
+            drop 16 snowball at loop-player's location
+            drop 16 egg at loop-player's location
+            drop 16 ender pearl at loop-player's location
+            drop 64 wind charge at loop-player's location
+on death of a cow:
+    if victim's display name is "마법의 소":
+        drop 16 cooked beef
+        drop 16 cooked porkchop
+        drop 16 cooked chicken
+        drop 16 cooked mutton
